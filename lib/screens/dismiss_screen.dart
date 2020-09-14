@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/data.dart';
 import '../screens/my_list.dart';
-
 import '../widgets/widgetry.dart';
 
 class Dismiss extends StatefulWidget {
@@ -109,7 +108,7 @@ class _DismissState extends State<Dismiss> {
                 icon: Icon(Icons.access_alarm),
                 onPressed: () {
                   Navigator.pushNamed(context, MyList.routeName,
-                      arguments: data.favorites);
+                      arguments: data.allFavorites());
                 }),
             IconButton(
                 icon: Icon(Icons.adb),

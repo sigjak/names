@@ -46,6 +46,22 @@ class Data with ChangeNotifier {
     nameObjects[result].isWatched = true;
   }
 
+  void unFavorite(String name) {
+    var result =
+        nameObjects.indexWhere((element) => (element.femaleName == name));
+    nameObjects[result].isFavorite = false;
+  }
+
+  List<String> allFavorites() {
+    favorites = [];
+    nameObjects.forEach((element) {
+      if (element.isFavorite) {
+        favorites.add(element.femaleName);
+      }
+    });
+    return favorites;
+  }
+
   void test() {
     for (var i = 0; i < nameObjects.length; i++) {
       if (nameObjects[i].isFavorite == true) {
