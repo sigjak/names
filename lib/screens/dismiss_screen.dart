@@ -27,7 +27,7 @@ class _DismissState extends State<Dismiss> {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<Data>(context, listen: false);
+    final data = Provider.of<Data>(context, listen: false);
     return Scaffold(
       body: Container(
         color: Colors.grey[200],
@@ -39,14 +39,7 @@ class _DismissState extends State<Dismiss> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 3,
-                decoration: BoxDecoration(
-                  color: Color(0xff5a348b),
-                  gradient: LinearGradient(
-                    colors: [Color(0xff8d70fe), Color(0xff2da9ef)],
-                    begin: Alignment.centerRight,
-                    end: Alignment(-1.0, -1.0),
-                  ),
-                ),
+                decoration: kBoxDec(),
                 child: myHeader(),
               ),
             ),
