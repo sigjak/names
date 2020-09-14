@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/data.dart';
-import '../screens/my_list.dart';
+import 'my_list.dart';
 import '../widgets/widgetry.dart';
 
-class Dismiss extends StatefulWidget {
+class SelectNames extends StatefulWidget {
+  static const routeName = '/select-names';
   @override
-  _DismissState createState() => _DismissState();
+  _SelectNamesState createState() => _SelectNamesState();
 }
 
-class _DismissState extends State<Dismiss> {
+class _SelectNamesState extends State<SelectNames> {
   List<String> myNames = [];
 
   _setup() async {
