@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import './services/data.dart';
 import './screens/my_list.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: FbaseInit(),
+        home: SelectNames(),
         routes: {
           MyList.routeName: (context) => MyList(),
         },
@@ -30,21 +30,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FbaseInit extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initialization,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Scaffold(body: Text('error'));
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          return SelectNames();
-        }
-        return Scaffold(body: Center(child: CircularProgressIndicator()));
-      },
-    );
-  }
-}
+// class FbaseInit extends StatelessWidget {
+//   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+//   @override
+//   Widget build(BuildContext context) {
+//     return FutureBuilder(
+//       future: _initialization,
+//       builder: (context, snapshot) {
+//         if (snapshot.hasError) {
+//           return Scaffold(body: Text('error'));
+//         }
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           return SelectNames();
+//         }
+//         return Scaffold(body: Center(child: CircularProgressIndicator()));
+//       },
+//     );
+//   }
+// }

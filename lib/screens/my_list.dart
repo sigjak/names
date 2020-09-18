@@ -41,7 +41,7 @@ class _MyListState extends State<MyList> {
               left: 18,
               child: Container(
                 padding: EdgeInsets.all(4),
-                width: 380,
+                width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.5,
                 decoration: BoxDecoration(
                     color: Colors.grey[200],
@@ -59,7 +59,7 @@ class _MyListState extends State<MyList> {
                             favNofn.removeAt(index);
                           });
                         },
-                        child: myListTile(favNofn[index]));
+                        child: Expanded(child: myListTile(favNofn[index])));
                   },
                 ),
               ),

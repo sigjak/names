@@ -48,8 +48,9 @@ class _SelectNamesState extends State<SelectNames> {
               top: 160,
               left: 18,
               child: Container(
+                margin: EdgeInsets.only(right: 18),
                 color: Colors.grey[200],
-                width: 380,
+                width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.5,
                 child: myNames.isEmpty
                     ? Center(
@@ -89,7 +90,10 @@ class _SelectNamesState extends State<SelectNames> {
           foregroundColor: Color(0xffffffff),
           child: Icon(Icons.add),
           tooltip: 'increment',
-          onPressed: () {}),
+          onPressed: () async {
+            await data.addData();
+            print('float');
+          }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         color: Color(0xff2da9ef),

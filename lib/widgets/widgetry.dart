@@ -39,12 +39,16 @@ Widget myListTile(String name) {
               width: 10,
               color: _color,
             ),
-            Container(
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(right: 15),
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
