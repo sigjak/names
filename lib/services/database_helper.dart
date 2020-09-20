@@ -10,7 +10,7 @@ class DatabaseHelper {
   static final table = 'girls';
   static final favTable = 'favs';
   static final columnId = 'id';
-  static final columnfemaleNames = 'femaleNames';
+  static final columnfemaleName = 'femaleName';
   static final columnIsFavorite = 'isFavorite';
   static final columnIsWatched = 'isWatched';
 
@@ -36,16 +36,10 @@ class DatabaseHelper {
     await db.execute('''
     CREATE TABLE $table(
       $columnId INTEGER PRIMARY KEY,
-      $columnfemaleNames TEXT NOT NULL,
+      $columnfemaleName TEXT NOT NULL,
       $columnIsFavorite INTEGER NOT NULL,
       $columnIsWatched INTEGER NOT NULL
     )
-    ''');
-    await db.execute('''
-    create table $favTable(
-    $columnId integer primary key,
-    $columnfemaleNames text not null
-    ) 
     ''');
   }
 
@@ -57,7 +51,7 @@ class DatabaseHelper {
 
     nameStulkur.forEach((name) {
       batch.insert(table, {
-        'femaleNames': name,
+        'femaleName': name,
         'isFavorite': 0,
         'isWatched': 0,
       });
@@ -79,9 +73,9 @@ class DatabaseHelper {
     List<String> temp = [];
     print('inQueryGirls');
     fm = await db
-        .rawQuery('SELECT femaleNames FROM $table Where isWatched = ?', [0]);
+        .rawQuery('SELECT femaleName FROM $table Where isWatched = ?', [0]);
     fm.forEach((element) {
-      temp.add(element['femaleNames']);
+      temp.add(element['femaleName']);
     });
     return temp;
   }
@@ -90,33 +84,50 @@ class DatabaseHelper {
   Future<void> markNameAsWatched(String name) async {
     Database db = await instance.database;
     await db.update('girls', {'isWatched': 1},
-        where: 'femaleNames = ?', whereArgs: [name]);
+        where: 'femaleName = ?', whereArgs: [name]);
   }
 
 // unfavorite name in favorites
   Future<void> markNameNotFavorite(String name) async {
     Database db = await instance.database;
     await db.update('girls', {'isFavorite': 0},
-        where: 'femaleNames = ?', whereArgs: [name]);
+        where: 'femaleName = ?', whereArgs: [name]);
   }
 
 // mark a single girl name in database-table girls as watched and favorite
   Future<void> markNameAsFavoriteAndWatched(String name) async {
     Database db = await instance.database;
     await db.update('girls', {'isWatched': 1, 'isFavorite': 1},
-        where: 'femaleNames = ?', whereArgs: [name]);
+        where: 'femaleName = ?', whereArgs: [name]);
   }
 
   // get all girl names in database-table marked as variable (isWatched, isFavorite)
-
   Future<List<String>> getIsGirls(String isSthg) async {
     List<Map<String, dynamic>> temp = [];
     List<String> girlyNames = [];
     Database db = await instance.database;
     temp = await db.rawQuery('SELECT * FROM $table WHERE $isSthg = ?', [1]);
     temp.forEach((element) {
-      girlyNames.add(element['femaleNames']);
+      girlyNames.add(element['femaleName']);
     });
     return girlyNames;
+  }
+
+  Future<int> tableEmpty() async {
+    List<Map<String, dynamic>> ll = [];
+    List<String> tr = [];
+    Database db = await instance.database;
+    ll = await db.query(table, columns: ['femaleName']);
+    ll.forEach((element) {
+      tr.add(element['femaleName']);
+    });
+    return tr.length;
+  }
+
+// reset all values to original state
+  Future<String> resetTable() async {
+    Database db = await instance.database;
+    await db.update(table, {'isFavorite': 0, 'isWatched': 0});
+    return ('watched and favorite reset');
   }
 }

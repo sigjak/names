@@ -1,6 +1,10 @@
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+//import 'package:more_names/services/database_helper.dart';
+//import 'package:rflutter_alert/rflutter_alert.dart';
+//import './database_helper.dart';
+//import 'package:sqflite/sqflite.dart';
 import 'dart:convert';
 //import '../models/name_model.dart';
 
@@ -13,7 +17,7 @@ class Data with ChangeNotifier {
   Future<List<String>> getNames() async {
     List<String> names = [];
     List<String> trimmedNames = [];
-    await rootBundle.loadString('assets/Stulkur.txt').then((q) => {
+    await rootBundle.loadString('assets/stulkurSmall.txt').then((q) => {
           for (String i in LineSplitter().convert(q)) {names.add(i)}
         });
     names.forEach((name) {

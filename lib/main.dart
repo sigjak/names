@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          fontFamily: 'DancingScript',
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
@@ -29,22 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class FbaseInit extends StatelessWidget {
-//   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder(
-//       future: _initialization,
-//       builder: (context, snapshot) {
-//         if (snapshot.hasError) {
-//           return Scaffold(body: Text('error'));
-//         }
-//         if (snapshot.connectionState == ConnectionState.done) {
-//           return SelectNames();
-//         }
-//         return Scaffold(body: Center(child: CircularProgressIndicator()));
-//       },
-//     );
-//   }
-// }

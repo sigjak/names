@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+//import 'package:sqflite/sqflite.dart';
 import '../services/database_helper.dart';
 import '../services/data.dart';
 import 'my_list.dart';
@@ -17,6 +19,7 @@ class _SelectNamesState extends State<SelectNames> {
   _setup() async {
     // if database empty initiate databases girls and fav
     bool check = await DatabaseHelper.instance.databaseExists();
+
     if (check == false) {
       girlNames = await Provider.of<Data>(context, listen: false).getNames();
 
@@ -32,6 +35,39 @@ class _SelectNamesState extends State<SelectNames> {
     }
   }
 
+  _myAlert(context) {
+    Alert(
+      context: context,
+      title: 'Byrja aftur?',
+      desc: 'Ertu viss? Fyrra vali verður eytt!',
+      buttons: [
+        DialogButton(
+          color: Colors.green,
+          child: Text(
+            'Nei',
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        DialogButton(
+            color: Colors.red,
+            child: Text(
+              'Já',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await DatabaseHelper.instance.resetTable();
+              girlNames = await DatabaseHelper.instance.queryGirls();
+              girlNames.shuffle();
+              setState(() {});
+            })
+      ],
+    ).show();
+  }
+
   @override
   void initState() {
     _setup();
@@ -40,7 +76,7 @@ class _SelectNamesState extends State<SelectNames> {
 
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<Data>(context, listen: false);
+    //final data = Provider.of<Data>(context, listen: false);
     return Scaffold(
       body: Container(
         color: Colors.grey[200],
@@ -123,14 +159,20 @@ class _SelectNamesState extends State<SelectNames> {
             IconButton(
                 icon: Icon(Icons.restore),
                 onPressed: () async {
-                  Navigator.pushNamed(context, MyList.routeName,
-                      arguments: await DatabaseHelper.instance
-                          .getIsGirls('isFavorite'));
+                  print('reset');
+                  _myAlert(context);
+                  // await DatabaseHelper.instance.resetTable();
+                  // girlNames = await DatabaseHelper.instance.queryGirls();
+                  // girlNames.shuffle();
+                  // setState(() {});
                 }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
-                onPressed: () {
-                  data.pop();
+                onPressed: () async {
+                  // exit the app
+                  // data.pop();
+
+                  print(await DatabaseHelper.instance.tableEmpty());
                   // List<String> watched = [];
                   // watched =
                   //     await DatabaseHelper.instance.getIsGirls('isWatched');
