@@ -63,17 +63,22 @@ Widget deleteBgr() {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       color: Colors.red,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Icon(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Icon(
             Icons.delete,
             size: 30,
             color: Colors.white,
           ),
-        ),
+          Icon(
+            Icons.delete,
+            size: 30,
+            color: Colors.white,
+          ),
+        ],
       ),
     ),
   );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../services/database_helper.dart';
 import '../services/data.dart';
 import 'my_list.dart';
 import '../widgets/widgetry.dart';
@@ -11,13 +12,24 @@ class SelectNames extends StatefulWidget {
 }
 
 class _SelectNamesState extends State<SelectNames> {
-  List<String> myNames = [];
+  List<String> girlNames = [];
 
   _setup() async {
-    myNames = await Provider.of<Data>(context, listen: false).getNames();
+    // if database empty initiate databases girls and fav
+    bool check = await DatabaseHelper.instance.databaseExists();
+    if (check == false) {
+      girlNames = await Provider.of<Data>(context, listen: false).getNames();
 
-    myNames.shuffle();
-    setState(() {});
+      await DatabaseHelper.instance.insertBatch(girlNames);
+
+      girlNames.shuffle();
+      setState(() {});
+    } else {
+      print(check);
+      girlNames = await DatabaseHelper.instance.queryGirls();
+      girlNames.shuffle();
+      setState(() {});
+    }
   }
 
   @override
@@ -52,30 +64,33 @@ class _SelectNamesState extends State<SelectNames> {
                 color: Colors.grey[200],
                 width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.5,
-                child: myNames.isEmpty
+                child: girlNames.isEmpty
                     ? Center(
                         child: Container(
                             width: 50,
                             height: 50,
                             child: CircularProgressIndicator()))
                     : ListView.builder(
-                        itemCount: myNames.length,
+                        itemCount: girlNames.length,
                         itemBuilder: (context, index) {
                           return Dismissible(
                               key: UniqueKey(),
                               background: deleteBgr(),
                               secondaryBackground: archiveBgr(),
-                              child: myListTile(myNames[index]),
+                              child: myListTile(girlNames[index]),
                               onDismissed: (direction) {
                                 if (direction == DismissDirection.startToEnd) {
-                                  data.addAsWatched(myNames[index]);
+                                  DatabaseHelper.instance
+                                      .markNameAsWatched(girlNames[index]);
                                   setState(() {
-                                    myNames.removeAt(index);
+                                    girlNames.removeAt(index);
                                   });
                                 } else {
-                                  data.addAsFavoriteAndWatched(myNames[index]);
+                                  DatabaseHelper.instance
+                                      .markNameAsFavoriteAndWatched(
+                                          girlNames[index]);
                                   setState(() {
-                                    myNames.removeAt(index);
+                                    girlNames.removeAt(index);
                                   });
                                 }
                               });
@@ -88,11 +103,14 @@ class _SelectNamesState extends State<SelectNames> {
       floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xff2da9ef),
           foregroundColor: Color(0xffffffff),
-          child: Icon(Icons.add),
-          tooltip: 'increment',
+          child: Icon(
+            Icons.thumb_up,
+            size: 35,
+          ),
           onPressed: () async {
-            await data.addData();
-            print('float');
+            Navigator.pushNamed(context, MyList.routeName,
+                arguments:
+                    await DatabaseHelper.instance.getIsGirls('isFavorite'));
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -103,15 +121,20 @@ class _SelectNamesState extends State<SelectNames> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-                icon: Icon(Icons.access_alarm),
-                onPressed: () {
+                icon: Icon(Icons.restore),
+                onPressed: () async {
                   Navigator.pushNamed(context, MyList.routeName,
-                      arguments: data.allFavorites());
+                      arguments: await DatabaseHelper.instance
+                          .getIsGirls('isFavorite'));
                 }),
             IconButton(
-                icon: Icon(Icons.adb),
+                icon: Icon(Icons.exit_to_app),
                 onPressed: () {
-                  data.test();
+                  data.pop();
+                  // List<String> watched = [];
+                  // watched =
+                  //     await DatabaseHelper.instance.getIsGirls('isWatched');
+                  // print(watched);
                 }),
           ],
         ),

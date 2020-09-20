@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:more_names/services/database_helper.dart';
 import 'package:more_names/widgets/widgetry.dart';
-import 'package:provider/provider.dart';
-import '../services/data.dart';
+//import 'package:provider/provider.dart';
+//import '../services/data.dart';
 //
 import '../widgets/widgetry.dart';
 
@@ -14,7 +15,7 @@ class MyList extends StatefulWidget {
 class _MyListState extends State<MyList> {
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<Data>(context, listen: false);
+    // final data = Provider.of<Data>(context, listen: false);
     final List<String> favNofn = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +43,7 @@ class _MyListState extends State<MyList> {
               child: Container(
                 padding: EdgeInsets.all(4),
                 width: MediaQuery.of(context).size.width - 36,
-                height: MediaQuery.of(context).size.height / 1.5,
+                height: MediaQuery.of(context).size.height / 1.7,
                 decoration: BoxDecoration(
                     color: Colors.grey[200],
                     border: Border.all(width: 2),
@@ -54,12 +55,14 @@ class _MyListState extends State<MyList> {
                         key: UniqueKey(),
                         background: deleteBgr(),
                         onDismissed: (direction) {
-                          data.unFavorite(favNofn[index]);
+                          DatabaseHelper.instance
+                              .markNameNotFavorite(favNofn[index]);
+
                           setState(() {
                             favNofn.removeAt(index);
                           });
                         },
-                        child: Expanded(child: myListTile(favNofn[index])));
+                        child: myListTile(favNofn[index]));
                   },
                 ),
               ),

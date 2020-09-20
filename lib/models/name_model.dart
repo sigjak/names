@@ -1,15 +1,21 @@
 class Name {
   final int id;
   final String femaleName;
-  bool isFavorite;
-  bool isWatched;
-  final DateTime createdAt;
+  int isFavorite;
+  int isWatched;
 
   Name({
     this.id,
     this.femaleName,
     this.isFavorite,
     this.isWatched,
-    this.createdAt,
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'femaleName': femaleName,
+      'isFavorite': isFavorite,
+      'isWatched': isWatched
+    };
+  }
 }
