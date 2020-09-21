@@ -1,8 +1,7 @@
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:more_names/services/database_helper.dart';
-//import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 //import './database_helper.dart';
 //import 'package:sqflite/sqflite.dart';
 import 'dart:convert';
@@ -10,9 +9,6 @@ import 'dart:convert';
 
 class Data with ChangeNotifier {
   List<String> _names = [];
-
-  //List<String> favorites = [];
-  //List<String> testNames = [];
 
   Future<List<String>> getNames() async {
     List<String> names = [];

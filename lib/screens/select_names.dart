@@ -15,6 +15,7 @@ class SelectNames extends StatefulWidget {
 
 class _SelectNamesState extends State<SelectNames> {
   List<String> girlNames = [];
+  bool testing = true;
 
   _setup() async {
     // if database empty initiate databases girls and fav
@@ -30,6 +31,15 @@ class _SelectNamesState extends State<SelectNames> {
     } else {
       print(check);
       girlNames = await DatabaseHelper.instance.queryGirls();
+      if (girlNames.isEmpty) {
+        setState(() {
+          testing = false;
+        });
+      }
+      // if (girlNames.isEmpty) {
+      //   Navigator.pushReplacementNamed(context, MyList.routeName,
+      //       arguments: await DatabaseHelper.instance.getIsGirls('isFavorite'));
+      // }
       girlNames.shuffle();
       setState(() {});
     }
@@ -62,6 +72,7 @@ class _SelectNamesState extends State<SelectNames> {
               await DatabaseHelper.instance.resetTable();
               girlNames = await DatabaseHelper.instance.queryGirls();
               girlNames.shuffle();
+              testing = true;
               setState(() {});
             })
       ],
@@ -74,10 +85,32 @@ class _SelectNamesState extends State<SelectNames> {
     super.initState();
   }
 
+  Future<void> basicAlert() async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Ekki fleiri nöfn'),
+            actions: [
+              FlatButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, MyList.routeName,
+                        arguments: await DatabaseHelper.instance
+                            .getIsGirls('isFavorite'));
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     //final data = Provider.of<Data>(context, listen: false);
     return Scaffold(
+      // appBar: AppBar(title: Text(testing)),
       body: Container(
         color: Colors.grey[200],
         width: MediaQuery.of(context).size.width,
@@ -100,12 +133,14 @@ class _SelectNamesState extends State<SelectNames> {
                 color: Colors.grey[200],
                 width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.5,
-                child: girlNames.isEmpty
+                child: (girlNames.isEmpty && testing)
                     ? Center(
                         child: Container(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator()))
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
                     : ListView.builder(
                         itemCount: girlNames.length,
                         itemBuilder: (context, index) {
@@ -118,6 +153,7 @@ class _SelectNamesState extends State<SelectNames> {
                                 if (direction == DismissDirection.startToEnd) {
                                   DatabaseHelper.instance
                                       .markNameAsWatched(girlNames[index]);
+
                                   setState(() {
                                     girlNames.removeAt(index);
                                   });
@@ -129,10 +165,32 @@ class _SelectNamesState extends State<SelectNames> {
                                     girlNames.removeAt(index);
                                   });
                                 }
+                                if (girlNames.isEmpty) {
+                                  setState(() {
+                                    testing = false;
+                                  });
+                                  basicAlert();
+                                }
                               });
                         }),
               ),
             ),
+            !testing
+                ? Positioned(
+                    top: 300,
+                    left: 50,
+                    child: Center(
+                      child: Container(
+                          width: 300,
+                          height: 400,
+                          child: Text(
+                            'Ekki fleiri nöfn!',
+                            style: TextStyle(
+                                fontSize: 40, fontWeight: FontWeight.bold),
+                          )),
+                    ),
+                  )
+                : SizedBox.shrink(),
           ],
         ),
       ),

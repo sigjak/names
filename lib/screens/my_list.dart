@@ -19,6 +19,7 @@ class _MyListState extends State<MyList> {
     final List<String> favNofn = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        actions: [IconButton(icon: Icon(Icons.restore), onPressed: () {})],
         backgroundColor: Colors.brown[300],
         title: Text('My List'),
       ),
