@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-//import 'package:sqflite/sqflite.dart';
 import '../services/database_helper.dart';
 import '../services/data.dart';
 import 'my_list.dart';
@@ -15,7 +14,7 @@ class SelectNames extends StatefulWidget {
 
 class _SelectNamesState extends State<SelectNames> {
   List<String> girlNames = [];
-  bool testing = true;
+  bool isMoreNames = true;
 
   _setup() async {
     // if database empty initiate databases girls and fav
@@ -23,17 +22,14 @@ class _SelectNamesState extends State<SelectNames> {
 
     if (check == false) {
       girlNames = await Provider.of<Data>(context, listen: false).getNames();
-
       await DatabaseHelper.instance.insertBatch(girlNames);
-
       girlNames.shuffle();
       setState(() {});
     } else {
-      print(check);
       girlNames = await DatabaseHelper.instance.queryGirls();
       if (girlNames.isEmpty) {
         setState(() {
-          testing = false;
+          isMoreNames = false;
         });
       }
       // if (girlNames.isEmpty) {
@@ -72,7 +68,7 @@ class _SelectNamesState extends State<SelectNames> {
               await DatabaseHelper.instance.resetTable();
               girlNames = await DatabaseHelper.instance.queryGirls();
               girlNames.shuffle();
-              testing = true;
+              isMoreNames = true;
               setState(() {});
             })
       ],
@@ -85,32 +81,34 @@ class _SelectNamesState extends State<SelectNames> {
     super.initState();
   }
 
-  Future<void> basicAlert() async {
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Ekki fleiri nöfn'),
-            actions: [
-              FlatButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, MyList.routeName,
-                        arguments: await DatabaseHelper.instance
-                            .getIsGirls('isFavorite'));
-                  },
-                  child: Text('OK'))
-            ],
-          );
-        });
+  noMoreNames() {
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "EKKI FLEIRI NÖFN !",
+      desc: "Nafnalist tæmdur...",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "VALIN NÖFN",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () async {
+            Navigator.of(context).pop();
+            Navigator.pushNamed(context, MyList.routeName,
+                arguments:
+                    await DatabaseHelper.instance.getIsGirls('isFavorite'));
+          },
+          width: 200,
+        )
+      ],
+    ).show();
   }
 
   @override
   Widget build(BuildContext context) {
-    //final data = Provider.of<Data>(context, listen: false);
+    final data = Provider.of<Data>(context, listen: false);
     return Scaffold(
-      // appBar: AppBar(title: Text(testing)),
       body: Container(
         color: Colors.grey[200],
         width: MediaQuery.of(context).size.width,
@@ -133,7 +131,7 @@ class _SelectNamesState extends State<SelectNames> {
                 color: Colors.grey[200],
                 width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.5,
-                child: (girlNames.isEmpty && testing)
+                child: (girlNames.isEmpty && isMoreNames)
                     ? Center(
                         child: Container(
                           width: 50,
@@ -145,7 +143,7 @@ class _SelectNamesState extends State<SelectNames> {
                         itemCount: girlNames.length,
                         itemBuilder: (context, index) {
                           return Dismissible(
-                              key: UniqueKey(),
+                              key: Key(girlNames[index]),
                               background: deleteBgr(),
                               secondaryBackground: archiveBgr(),
                               child: myListTile(girlNames[index]),
@@ -167,18 +165,18 @@ class _SelectNamesState extends State<SelectNames> {
                                 }
                                 if (girlNames.isEmpty) {
                                   setState(() {
-                                    testing = false;
+                                    isMoreNames = false;
                                   });
-                                  basicAlert();
+                                  noMoreNames();
                                 }
                               });
                         }),
               ),
             ),
-            !testing
+            !isMoreNames
                 ? Positioned(
                     top: 300,
-                    left: 50,
+                    left: 70,
                     child: Center(
                       child: Container(
                           width: 300,
@@ -195,7 +193,7 @@ class _SelectNamesState extends State<SelectNames> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xff2da9ef),
+          backgroundColor: Colors.brown[400],
           foregroundColor: Color(0xffffffff),
           child: Icon(
             Icons.thumb_up,
@@ -208,7 +206,7 @@ class _SelectNamesState extends State<SelectNames> {
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: Color(0xff2da9ef),
+        color: Colors.brown[400],
         shape: CircularNotchedRectangle(),
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -216,25 +214,16 @@ class _SelectNamesState extends State<SelectNames> {
           children: [
             IconButton(
                 icon: Icon(Icons.restore),
+                color: Colors.white,
                 onPressed: () async {
-                  print('reset');
                   _myAlert(context);
-                  // await DatabaseHelper.instance.resetTable();
-                  // girlNames = await DatabaseHelper.instance.queryGirls();
-                  // girlNames.shuffle();
-                  // setState(() {});
                 }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
+                color: Colors.white,
                 onPressed: () async {
                   // exit the app
-                  // data.pop();
-
-                  print(await DatabaseHelper.instance.tableEmpty());
-                  // List<String> watched = [];
-                  // watched =
-                  //     await DatabaseHelper.instance.getIsGirls('isWatched');
-                  // print(watched);
+                  data.pop();
                 }),
           ],
         ),

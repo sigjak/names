@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import 'package:firebase_core/firebase_core.dart';
 import './services/data.dart';
 import './screens/my_list.dart';
 
@@ -18,8 +17,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          buttonColor: Colors.brown[400],
           fontFamily: 'Raleway',
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.brown,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: SelectNames(),

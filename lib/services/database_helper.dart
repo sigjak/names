@@ -8,7 +8,6 @@ class DatabaseHelper {
   static final databaseName = "Names.db";
   static final databaseVersion = 1;
   static final table = 'girls';
-  static final favTable = 'favs';
   static final columnId = 'id';
   static final columnfemaleName = 'femaleName';
   static final columnIsFavorite = 'isFavorite';
@@ -71,7 +70,7 @@ class DatabaseHelper {
     Database db = await instance.database;
     List<Map<String, dynamic>> fm = [];
     List<String> temp = [];
-    print('inQueryGirls');
+
     fm = await db
         .rawQuery('SELECT femaleName FROM $table Where isWatched = ?', [0]);
     fm.forEach((element) {

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:more_names/services/database_helper.dart';
 import 'package:more_names/widgets/widgetry.dart';
-//import 'package:provider/provider.dart';
-//import '../services/data.dart';
-//
 import '../widgets/widgetry.dart';
 
 class MyList extends StatefulWidget {
@@ -19,9 +16,9 @@ class _MyListState extends State<MyList> {
     final List<String> favNofn = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(icon: Icon(Icons.restore), onPressed: () {})],
         backgroundColor: Colors.brown[300],
-        title: Text('My List'),
+        centerTitle: true,
+        title: Text('Valin nöfn'),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
