@@ -66,7 +66,7 @@ class DatabaseHelper {
   }
 
 // query girls database and retrun girlnames as list of strings
-  Future<List<String>> queryGirls() async {
+  Future<List<String>> queryUnwatchedGirls() async {
     Database db = await instance.database;
     List<Map<String, dynamic>> fm = [];
     List<String> temp = [];

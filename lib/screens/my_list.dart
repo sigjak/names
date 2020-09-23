@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:more_names/services/database_helper.dart';
-import 'package:more_names/widgets/widgetry.dart';
+import 'package:provider/provider.dart';
+import '../services/data.dart';
+import '../services/database_helper.dart';
 import '../widgets/widgetry.dart';
 
 class MyList extends StatefulWidget {
@@ -12,13 +13,27 @@ class MyList extends StatefulWidget {
 class _MyListState extends State<MyList> {
   @override
   Widget build(BuildContext context) {
-    // final data = Provider.of<Data>(context, listen: false);
+    final data = Provider.of<Data>(context, listen: false);
     final List<String> favNofn = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.brown[300],
         centerTitle: true,
         title: Text('Valin nöfn'),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.info,
+                size: 40,
+              ),
+              onPressed: () async {
+                print(await data.getInfo('isWatched'));
+                data.myAlert(context);
+                print(await data.getInfo('isFavorite'));
+
+                //print(await data.getUnwatchedGirls());
+              }),
+        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

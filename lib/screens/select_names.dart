@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../services/database_helper.dart';
 import '../services/data.dart';
-import 'my_list.dart';
+import './my_list.dart';
 import '../widgets/widgetry.dart';
 
 class SelectNames extends StatefulWidget {
@@ -26,16 +26,13 @@ class _SelectNamesState extends State<SelectNames> {
       girlNames.shuffle();
       setState(() {});
     } else {
-      girlNames = await DatabaseHelper.instance.queryGirls();
+      girlNames = await DatabaseHelper.instance.queryUnwatchedGirls();
       if (girlNames.isEmpty) {
         setState(() {
           isMoreNames = false;
         });
       }
-      // if (girlNames.isEmpty) {
-      //   Navigator.pushReplacementNamed(context, MyList.routeName,
-      //       arguments: await DatabaseHelper.instance.getIsGirls('isFavorite'));
-      // }
+
       girlNames.shuffle();
       setState(() {});
     }
@@ -66,7 +63,7 @@ class _SelectNamesState extends State<SelectNames> {
             onPressed: () async {
               Navigator.pop(context);
               await DatabaseHelper.instance.resetTable();
-              girlNames = await DatabaseHelper.instance.queryGirls();
+              girlNames = await DatabaseHelper.instance.queryUnwatchedGirls();
               girlNames.shuffle();
               isMoreNames = true;
               setState(() {});
