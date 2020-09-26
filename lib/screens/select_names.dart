@@ -94,7 +94,8 @@ class _SelectNamesState extends State<SelectNames> {
                               key: Key(data.onlyNames[index]),
                               background: deleteBgr(),
                               secondaryBackground: archiveBgr(),
-                              child: myListTile(data.onlyNames[index]),
+                              child: Card(
+                                  child: myListTile(data.onlyNames[index])),
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   await data
@@ -165,6 +166,7 @@ class _SelectNamesState extends State<SelectNames> {
                 color: Colors.white,
                 onPressed: () async {
                   data.reset(context);
+                  isMore = true;
                 }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
