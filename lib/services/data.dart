@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import './database_helper.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+import '../screens/my_list.dart';
 import 'dart:convert';
 
 class Data with ChangeNotifier {
@@ -51,14 +51,6 @@ class Data with ChangeNotifier {
       temp.add(element['femaleName']);
     });
     return temp;
-  }
-
-  Future addToOnlyListAndDb() async {
-    Database db = await DatabaseHelper.instance.database;
-    await db.insert('${DatabaseHelper.table}',
-        {'femaleName': 'sig', 'isFavorite': 0, 'isWatched': 0});
-    onlyNames.add('sig');
-    notifyListeners();
   }
 
   Future<bool> checkIfDbCreated() async {
@@ -130,16 +122,21 @@ class Data with ChangeNotifier {
     await loadUnwatchedNamesFromDatabase();
   }
 
+  Future<void> pop({bool animated}) async {
+    await SystemChannels.platform
+        .invokeMethod<void>('SystemNavigator.pop', animated);
+  }
+
   Future<void> reset(context) async {
     Alert(
       context: context,
       type: AlertType.warning,
-      title: "RFLUTTER ALERT",
-      desc: "Flutter is more awesome with RFlutter Alert.",
+      title: "Byrja aftur??",
+      desc: "Nafnalista verður eytt!",
       buttons: [
         DialogButton(
           child: Text(
-            "Unwatch",
+            "Byrja aftur",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () async {
@@ -148,6 +145,29 @@ class Data with ChangeNotifier {
           },
           color: Color.fromRGBO(0, 179, 134, 1.0),
         ),
+      ],
+    ).show();
+  }
+
+  Future<void> noMoreNames(context) async {
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "EKKI FLEIRI NÖFN !",
+      desc: "Nafnalist tæmdur...",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "VALIN NÖFN",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () async {
+            Navigator.of(context).pop();
+            Navigator.pushNamed(context, MyList.routeName,
+                arguments: await loadAllFavorites());
+          },
+          width: 200,
+        )
       ],
     ).show();
   }

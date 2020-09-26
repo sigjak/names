@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 //import '../services/database_helper.dart';
 import '../services/data.dart';
-//import './my_list.dart';
+import './my_list.dart';
 import '../widgets/widgetry.dart';
 
 class SelectNames extends StatefulWidget {
@@ -116,7 +116,7 @@ class _SelectNamesState extends State<SelectNames> {
                                   setState(() {
                                     isMore = false;
                                   });
-                                  //noMoreNames();
+                                  data.noMoreNames(context);
                                 }
                               });
                         }),
@@ -149,9 +149,8 @@ class _SelectNamesState extends State<SelectNames> {
             size: 35,
           ),
           onPressed: () async {
-            // Navigator.pushNamed(context, MyList.routeName,
-            //     arguments:
-            //         await DatabaseHelper.instance.getIsGirls('isFavorite'));
+            Navigator.pushNamed(context, MyList.routeName,
+                arguments: await data.loadAllFavorites());
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -173,7 +172,7 @@ class _SelectNamesState extends State<SelectNames> {
                 color: Colors.white,
                 onPressed: () async {
                   // exit the app
-                  // data.pop();
+                  data.pop();
                 }),
           ],
         ),

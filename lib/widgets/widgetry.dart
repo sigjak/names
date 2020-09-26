@@ -60,26 +60,24 @@ Widget myListTile(String name) {
 }
 
 Widget deleteBgr() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      color: Colors.red,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(
-            Icons.delete,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.delete,
-            size: 30,
-            color: Colors.white,
-          ),
-        ],
-      ),
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 10),
+    padding: EdgeInsets.symmetric(horizontal: 10),
+    color: Colors.red,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Icon(
+          Icons.delete,
+          size: 30,
+          color: Colors.white,
+        ),
+        Icon(
+          Icons.delete,
+          size: 30,
+          color: Colors.white,
+        ),
+      ],
     ),
   );
 }
@@ -100,6 +98,35 @@ Widget archiveBgr() {
           ),
         ),
       ),
+    ),
+  );
+}
+
+ListTile favListTile(List<String> favNofn, int index) {
+  RandomColor randomColor = RandomColor();
+  Color _color = randomColor.randomColor();
+  Color _color2 = randomColor.randomColor();
+  return ListTile(
+    contentPadding: EdgeInsets.symmetric(horizontal: 0),
+    title: Text(
+      favNofn[index],
+      style: TextStyle(fontSize: 25),
+      textAlign: TextAlign.center,
+    ),
+    trailing: Container(
+      width: 15,
+      height: 80,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [_color, _color2]),
+      ),
+      // child: Icon(
+      //   Icons.leak_remove,
+      //   color: Colors.white,
+      //   size: 35,
+      // ),
     ),
   );
 }
