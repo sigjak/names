@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         home: SelectNames(),
         routes: {
-          MyList.routeName: (context) => MyList(),
+          // MyList.routeName: (context) => MyList(),
         },
       ),
     );

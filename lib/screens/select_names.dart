@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import '../services/database_helper.dart';
+//import '../services/database_helper.dart';
 import '../services/data.dart';
-import './my_list.dart';
+//import './my_list.dart';
 import '../widgets/widgetry.dart';
 
 class SelectNames extends StatefulWidget {
@@ -13,98 +13,49 @@ class SelectNames extends StatefulWidget {
 }
 
 class _SelectNamesState extends State<SelectNames> {
-  List<String> girlNames = [];
-  bool isMoreNames = true;
-
-  _setup() async {
-    // if database empty initiate databases girls and fav
-    bool check = await DatabaseHelper.instance.databaseExists();
-
-    if (check == false) {
-      girlNames = await Provider.of<Data>(context, listen: false).getNames();
-      await DatabaseHelper.instance.insertBatch(girlNames);
-      girlNames.shuffle();
-      setState(() {});
-    } else {
-      girlNames = await DatabaseHelper.instance.queryUnwatchedGirls();
-      if (girlNames.isEmpty) {
-        setState(() {
-          isMoreNames = false;
-        });
-      }
-
-      girlNames.shuffle();
-      setState(() {});
-    }
-  }
-
-  _myAlert(context) {
-    Alert(
-      context: context,
-      title: 'Byrja aftur?',
-      desc: 'Ertu viss? Fyrra vali verður eytt!',
-      buttons: [
-        DialogButton(
-          color: Colors.green,
-          child: Text(
-            'Nei',
-            style: TextStyle(color: Colors.white),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        DialogButton(
-            color: Colors.red,
-            child: Text(
-              'Já',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () async {
-              Navigator.pop(context);
-              await DatabaseHelper.instance.resetTable();
-              girlNames = await DatabaseHelper.instance.queryUnwatchedGirls();
-              girlNames.shuffle();
-              isMoreNames = true;
-              setState(() {});
-            })
-      ],
-    ).show();
-  }
-
+  List<String> allNames = [];
+  bool isMore = true;
   @override
   void initState() {
     _setup();
     super.initState();
   }
 
-  noMoreNames() {
-    Alert(
-      context: context,
-      type: AlertType.success,
-      title: "EKKI FLEIRI NÖFN !",
-      desc: "Nafnalist tæmdur...",
-      buttons: [
-        DialogButton(
-          child: Text(
-            "VALIN NÖFN",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () async {
-            Navigator.of(context).pop();
-            Navigator.pushNamed(context, MyList.routeName,
-                arguments:
-                    await DatabaseHelper.instance.getIsGirls('isFavorite'));
-          },
-          width: 200,
-        )
-      ],
-    ).show();
+  _setup() async {
+    if (await Provider.of<Data>(context, listen: false).checkIfDbCreated()) {
+      await Provider.of<Data>(context, listen: false)
+          .loadUnwatchedNamesFromDatabase();
+    } else
+      await Provider.of<Data>(context, listen: false).createDb();
   }
+
+  // noMoreNames() {
+  //   Alert(
+  //     context: context,
+  //     type: AlertType.success,
+  //     title: "EKKI FLEIRI NÖFN !",
+  //     desc: "Nafnalist tæmdur...",
+  //     buttons: [
+  //       DialogButton(
+  //         child: Text(
+  //           "VALIN NÖFN",
+  //           style: TextStyle(color: Colors.white, fontSize: 20),
+  //         ),
+  //         onPressed: () async {
+  //           Navigator.of(context).pop();
+  //           // Navigator.pushNamed(context, MyList.routeName,
+  //           //     arguments:
+  //           //         await DatabaseHelper.instance.getIsGirls('isFavorite'));
+  //         },
+  //         width: 200,
+  //       )
+  //     ],
+  //   ).show();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<Data>(context, listen: false);
+    final data = Provider.of<Data>(context);
     return Scaffold(
       body: Container(
         color: Colors.grey[200],
@@ -128,7 +79,7 @@ class _SelectNamesState extends State<SelectNames> {
                 color: Colors.grey[200],
                 width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.5,
-                child: (girlNames.isEmpty && isMoreNames)
+                child: (data.onlyNames.isEmpty && isMore)
                     ? Center(
                         child: Container(
                           width: 50,
@@ -137,40 +88,40 @@ class _SelectNamesState extends State<SelectNames> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: girlNames.length,
+                        itemCount: data.onlyNames.length,
                         itemBuilder: (context, index) {
                           return Dismissible(
-                              key: Key(girlNames[index]),
+                              key: Key(data.onlyNames[index]),
                               background: deleteBgr(),
                               secondaryBackground: archiveBgr(),
-                              child: myListTile(girlNames[index]),
-                              onDismissed: (direction) {
+                              child: myListTile(data.onlyNames[index]),
+                              onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
-                                  DatabaseHelper.instance
-                                      .markNameAsWatched(girlNames[index]);
+                                  await data
+                                      .markasWatched(data.onlyNames[index]);
 
                                   setState(() {
-                                    girlNames.removeAt(index);
+                                    data.onlyNames.removeAt(index);
                                   });
                                 } else {
-                                  DatabaseHelper.instance
-                                      .markNameAsFavoriteAndWatched(
-                                          girlNames[index]);
+                                  await data.markasFavAndWatched(
+                                      data.onlyNames[index]);
+
                                   setState(() {
-                                    girlNames.removeAt(index);
+                                    data.onlyNames.removeAt(index);
                                   });
                                 }
-                                if (girlNames.isEmpty) {
+                                if (data.onlyNames.isEmpty) {
                                   setState(() {
-                                    isMoreNames = false;
+                                    isMore = false;
                                   });
-                                  noMoreNames();
+                                  //noMoreNames();
                                 }
                               });
                         }),
               ),
             ),
-            !isMoreNames
+            !isMore
                 ? Positioned(
                     top: 300,
                     left: 70,
@@ -197,9 +148,9 @@ class _SelectNamesState extends State<SelectNames> {
             size: 35,
           ),
           onPressed: () async {
-            Navigator.pushNamed(context, MyList.routeName,
-                arguments:
-                    await DatabaseHelper.instance.getIsGirls('isFavorite'));
+            // Navigator.pushNamed(context, MyList.routeName,
+            //     arguments:
+            //         await DatabaseHelper.instance.getIsGirls('isFavorite'));
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -213,14 +164,14 @@ class _SelectNamesState extends State<SelectNames> {
                 icon: Icon(Icons.restore),
                 color: Colors.white,
                 onPressed: () async {
-                  _myAlert(context);
+                  data.reset(context);
                 }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
                 color: Colors.white,
                 onPressed: () async {
                   // exit the app
-                  data.pop();
+                  // data.pop();
                 }),
           ],
         ),
