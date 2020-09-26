@@ -11,7 +11,7 @@ class Data with ChangeNotifier {
   Future<List<String>> getNames() async {
     List<String> names = [];
     List<String> trimmedNames = [];
-    await rootBundle.loadString('assets/Stulkur.txt').then((q) => {
+    await rootBundle.loadString('assets/Stulkur_small.txt').then((q) => {
           for (String i in LineSplitter().convert(q)) {names.add(i)}
         });
     names.forEach((name) {
