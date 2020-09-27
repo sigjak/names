@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/data.dart';
-//import '../services/database_helper.dart';
 import '../widgets/widgetry.dart';
 
 class MyList extends StatefulWidget {
@@ -27,11 +26,7 @@ class _MyListState extends State<MyList> {
                 size: 40,
               ),
               onPressed: () async {
-                // print(await data.getInfo('isWatched'));
-                // data.myAlert(context);
-                // print(await data.getInfo('isFavorite'));
                 data.infoAlert(context);
-                //print(await data.getUnwatchedGirls());
               }),
         ],
       ),
@@ -54,7 +49,7 @@ class _MyListState extends State<MyList> {
               top: 130,
               left: 18,
               child: Container(
-                padding: EdgeInsets.all(4),
+                padding: EdgeInsets.all(10),
                 width: MediaQuery.of(context).size.width - 36,
                 height: MediaQuery.of(context).size.height / 1.7,
                 decoration: BoxDecoration(
@@ -76,7 +71,7 @@ class _MyListState extends State<MyList> {
                       },
                       child: Card(
                         margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 6),
                         child: favListTile(favNofn, index),
                       ),
                       // child: myListTile(favNofn[index]),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import 'package:rflutter_alert/rflutter_alert.dart';
-//import '../services/database_helper.dart';
 import '../services/data.dart';
 import './my_list.dart';
 import '../widgets/widgetry.dart';
@@ -28,30 +26,6 @@ class _SelectNamesState extends State<SelectNames> {
     } else
       await Provider.of<Data>(context, listen: false).createDb();
   }
-
-  // noMoreNames() {
-  //   Alert(
-  //     context: context,
-  //     type: AlertType.success,
-  //     title: "EKKI FLEIRI NÖFN !",
-  //     desc: "Nafnalist tæmdur...",
-  //     buttons: [
-  //       DialogButton(
-  //         child: Text(
-  //           "VALIN NÖFN",
-  //           style: TextStyle(color: Colors.white, fontSize: 20),
-  //         ),
-  //         onPressed: () async {
-  //           Navigator.of(context).pop();
-  //           // Navigator.pushNamed(context, MyList.routeName,
-  //           //     arguments:
-  //           //         await DatabaseHelper.instance.getIsGirls('isFavorite'));
-  //         },
-  //         width: 200,
-  //       )
-  //     ],
-  //   ).show();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +62,14 @@ class _SelectNamesState extends State<SelectNames> {
                         ),
                       )
                     : ListView.builder(
+                        padding: EdgeInsets.all(10),
                         itemCount: data.onlyNames.length,
                         itemBuilder: (context, index) {
                           return Dismissible(
                               key: Key(data.onlyNames[index]),
                               background: deleteBgr(),
                               secondaryBackground: archiveBgr(),
-                              child: Card(
-                                  child: myListTile(data.onlyNames[index])),
+                              child: myListTile(data.onlyNames[index]),
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   await data

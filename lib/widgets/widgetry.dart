@@ -25,7 +25,7 @@ Widget myListTile(String name) {
   RandomColor randomColor = RandomColor();
   Color _color = randomColor.randomColor();
   return Padding(
-    padding: const EdgeInsets.all(8),
+    padding: const EdgeInsets.symmetric(vertical: 8),
     child: Container(
       height: 80,
       child: Material(
@@ -41,7 +41,7 @@ Widget myListTile(String name) {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.only(right: 15),
+                // padding: EdgeInsets.only(right: 15),
                 child: Text(
                   name,
                   textAlign: TextAlign.center,
@@ -60,24 +60,26 @@ Widget myListTile(String name) {
 }
 
 Widget deleteBgr() {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 10),
-    padding: EdgeInsets.symmetric(horizontal: 10),
-    color: Colors.red,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(
-          Icons.delete,
-          size: 30,
-          color: Colors.white,
-        ),
-        Icon(
-          Icons.delete,
-          size: 30,
-          color: Colors.white,
-        ),
-      ],
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      color: Colors.red,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Icon(
+            Icons.delete,
+            size: 30,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.delete,
+            size: 30,
+            color: Colors.white,
+          ),
+        ],
+      ),
     ),
   );
 }

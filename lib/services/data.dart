@@ -14,12 +14,9 @@ class Data with ChangeNotifier {
   List<String> names = [];
   List<String> onlyNames = [];
   List<String> favorites = [];
-  // List<Map<String, dynamic>> clonedNamesMap = [];
-
-  /////////////////////////
 
   Future<void> createDb() async {
-    await rootBundle.loadString('assets/Stulkur_small.txt').then((q) => {
+    await rootBundle.loadString('assets/Stulkur.txt').then((q) => {
           for (String i in LineSplitter().convert(q)) {names.add(i)}
         });
 
