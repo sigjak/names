@@ -129,7 +129,7 @@ class Data with ChangeNotifier {
         .invokeMethod<void>('SystemNavigator.pop', animated);
   }
 
-  Future<void> InfoAlert(context) async {
+  Future<void> infoAlert(context) async {
     int numbLeft = onlyNames.length;
     int numbFavs = favorites.length;
     List<String> temp = await getWatchedNames();

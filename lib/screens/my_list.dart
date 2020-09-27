@@ -30,7 +30,7 @@ class _MyListState extends State<MyList> {
                 // print(await data.getInfo('isWatched'));
                 // data.myAlert(context);
                 // print(await data.getInfo('isFavorite'));
-                data.InfoAlert(context);
+                data.infoAlert(context);
                 //print(await data.getUnwatchedGirls());
               }),
         ],
