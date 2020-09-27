@@ -70,6 +70,7 @@ class Data with ChangeNotifier {
       onlyNames.add(item['femaleName']);
     });
     onlyNames.shuffle();
+    favorites = [];
     notifyListeners();
   }
 
@@ -79,7 +80,7 @@ class Data with ChangeNotifier {
         where: 'femaleName = ?', whereArgs: [name]);
   }
 
-  Future<void> markasWatched(String name) async {
+  Future<void> markAsWatched(String name) async {
     Database db = await DatabaseHelper.instance.database;
     await db.update("girls", {'isWatched': 1},
         where: 'femaleName = ?', whereArgs: [name]);
@@ -116,9 +117,10 @@ class Data with ChangeNotifier {
     return watch;
   }
 
-  Future<void> unWatch() async {
+  Future<void> unWatchAndUnfavorite() async {
     Database db = await DatabaseHelper.instance.database;
-    await db.update("girls", {'isWatched': 0});
+    await db.update("girls", {'isWatched': 0, 'isFavorite': 0});
+
     await loadUnwatchedNamesFromDatabase();
   }
 
@@ -127,7 +129,37 @@ class Data with ChangeNotifier {
         .invokeMethod<void>('SystemNavigator.pop', animated);
   }
 
-  Future<void> reset(context) async {
+  Future<void> InfoAlert(context) async {
+    int numbLeft = onlyNames.length;
+    int numbFavs = favorites.length;
+    List<String> temp = await getWatchedNames();
+    int numbWatched = temp.length;
+
+    Alert(
+      context: context,
+      type: AlertType.info,
+      title: "",
+      content: Column(
+        children: [
+          Text('$numbWatched nöfn skoðuð.'),
+          Text('$numbFavs nöfn valin.'),
+          Text('$numbLeft eftir.'),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Close",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          radius: BorderRadius.circular(4.0),
+        ),
+      ],
+    ).show();
+  }
+
+  Future<void> resetAlert(context) async {
     Alert(
       context: context,
       type: AlertType.warning,
@@ -140,7 +172,7 @@ class Data with ChangeNotifier {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () async {
-            await unWatch();
+            await unWatchAndUnfavorite();
             Navigator.pop(context);
           },
           color: Color.fromRGBO(0, 179, 134, 1.0),
@@ -149,7 +181,7 @@ class Data with ChangeNotifier {
     ).show();
   }
 
-  Future<void> noMoreNames(context) async {
+  Future<void> noMoreNamesAlert(context) async {
     Alert(
       context: context,
       type: AlertType.success,

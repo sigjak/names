@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+//import 'package:rflutter_alert/rflutter_alert.dart';
 //import '../services/database_helper.dart';
 import '../services/data.dart';
 import './my_list.dart';
@@ -99,7 +99,7 @@ class _SelectNamesState extends State<SelectNames> {
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   await data
-                                      .markasWatched(data.onlyNames[index]);
+                                      .markAsWatched(data.onlyNames[index]);
 
                                   setState(() {
                                     data.onlyNames.removeAt(index);
@@ -116,7 +116,7 @@ class _SelectNamesState extends State<SelectNames> {
                                   setState(() {
                                     isMore = false;
                                   });
-                                  data.noMoreNames(context);
+                                  data.noMoreNamesAlert(context);
                                 }
                               });
                         }),
@@ -164,7 +164,7 @@ class _SelectNamesState extends State<SelectNames> {
                 icon: Icon(Icons.restore),
                 color: Colors.white,
                 onPressed: () async {
-                  data.reset(context);
+                  data.resetAlert(context);
                   isMore = true;
                 }),
             IconButton(

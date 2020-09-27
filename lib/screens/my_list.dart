@@ -30,7 +30,7 @@ class _MyListState extends State<MyList> {
                 // print(await data.getInfo('isWatched'));
                 // data.myAlert(context);
                 // print(await data.getInfo('isFavorite'));
-
+                data.InfoAlert(context);
                 //print(await data.getUnwatchedGirls());
               }),
         ],
@@ -90,19 +90,4 @@ class _MyListState extends State<MyList> {
       ),
     );
   }
-
-  // ListTile favListTile(List<String> favNofn, int index) {
-  //   return ListTile(
-  //                       title: Text(
-  //                         favNofn[index],
-  //                         style: TextStyle(fontSize: 25),
-  //                         textAlign: TextAlign.center,
-  //                       ),
-  //                       trailing: Container(
-  //                         width: 30,
-  //                         height: 50,
-  //                         color: Colors.red,
-  //                       ),
-  //                     );
-  // }
 }
