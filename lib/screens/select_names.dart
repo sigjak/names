@@ -40,19 +40,19 @@ class _SelectNamesState extends State<SelectNames> {
             Positioned(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 3,
+                height: MediaQuery.of(context).size.height / 4,
                 decoration: kBoxDec(),
                 child: myHeader(),
               ),
             ),
             Positioned(
-              top: 160,
+              top: MediaQuery.of(context).size.height / 4.5,
               left: 18,
               child: Container(
                 margin: EdgeInsets.only(right: 18),
                 color: Colors.grey[200],
                 width: MediaQuery.of(context).size.width - 36,
-                height: MediaQuery.of(context).size.height / 1.5,
+                height: MediaQuery.of(context).size.height / 1.3,
                 child: (data.onlyNames.isEmpty && isMore)
                     ? Center(
                         child: Container(

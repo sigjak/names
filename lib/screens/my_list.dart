@@ -46,12 +46,12 @@ class _MyListState extends State<MyList> {
               ),
             ),
             Positioned(
-              top: 130,
+              top: MediaQuery.of(context).size.height / 4,
               left: 18,
               child: Container(
                 padding: EdgeInsets.all(10),
                 width: MediaQuery.of(context).size.width - 36,
-                height: MediaQuery.of(context).size.height / 1.7,
+                height: MediaQuery.of(context).size.height / 1.5,
                 decoration: BoxDecoration(
                     color: Colors.grey[200],
                     border: Border.all(width: 2),
